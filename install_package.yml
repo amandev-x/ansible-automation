@@ -1,0 +1,27 @@
+---
+
+
+- name: Install Chrony Package
+  hosts: webservers
+  become: true
+  
+  tasks:
+    - name: Ensure chrony package is installed
+      apt:
+        name: chrony
+        state: present
+        update_cache: yes
+
+    - name: Copy chrony configuration to hosts
+      copy:
+        src: ./chrony.conf.sample
+        dest: /etc/chrony/chrony.conf
+        mode: 644
+        owner: ansible
+        group: ansible
+
+    - name: Enable and start chrony service
+      service:
+        name: chrony
+        state: started
+        enabled: yes
